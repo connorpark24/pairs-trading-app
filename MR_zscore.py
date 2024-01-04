@@ -16,13 +16,13 @@ timestamp_start=int(datetime_start.timestamp())
 timestamp_end=int(datetime_end.timestamp()) 
 
 # load data
-ticker='ADBE'
+ticker='MSFT'
 df = download_stock_data(ticker,timestamp_start,timestamp_end)
 df = df.set_index('Date')
 df.head()
 
 # get 20-day moving average
-window=20
+window=60
 df['ma_20'] = df['Adj Close'].rolling(window=window).mean()
 
 # get sd of 20-day ma and z-score of price

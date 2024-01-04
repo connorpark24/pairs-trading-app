@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import datetime as dt
 import numpy as np
+import seaborn as sns 
 
 def download_stock_data(ticker,timestamp_start,timestamp_end):
     url=f"https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={timestamp_start}&period2={timestamp_end}&interval\
@@ -9,30 +10,70 @@ def download_stock_data(ticker,timestamp_start,timestamp_end):
     df = pd.read_csv(url)
     return df
 
+def find_most_correlated_stocks(df):
+    corr_matrix = df.corr()
+    corr_matrix = corr_matrix.unstack()
+    sorted_corr = corr_matrix.sort_values(kind="quicksort", ascending=False)
+    most_correlated_pair = sorted_corr.index[sorted_corr != 1][0]
+    return most_correlated_pair
+
 # set time period to use
-datetime_start=dt.datetime(2022, 2, 8, 7, 35, 51)
+datetime_start=dt.datetime(2023, 1, 8, 7, 35, 51)
 datetime_end=dt.datetime.today()
 timestamp_start=int(datetime_start.timestamp()) 
 timestamp_end=int(datetime_end.timestamp()) 
 
 # load data
-tickers=['BRK-B','MSFT']
-df_global=pd.DataFrame()
+tickers = [
+    "AAPL",
+    "MSFT",
+    "AMZN",
+    "NVDA",
+    "GOOGL",
+    "META",
+    "TSLA",
+    "BRK-B",
+    "AVGO",
+    "UNH",
+    "JPM",
+    "LLY",
+    "V",
+    "XOM",
+    "JNJ",
+    "HD",
+    "MA",
+    "PG",
+    "COST",
+    "ABBV",
+    "MRK",
+    "ADBE",
+    "CVX",
+    "CRM"
+]
+df_global = pd.DataFrame()
 for ticker in tickers:
-    df_temp = download_stock_data(ticker,timestamp_start,timestamp_end)[['Date','Adj Close']]
+    df_temp = download_stock_data(ticker, timestamp_start, timestamp_end)[['Date', 'Adj Close']]
     df_temp = df_temp.set_index('Date')
-    df_temp.columns=[ticker]
-    df_global=pd.concat((df_global, df_temp),axis=1)
-df_global.head()
+    df_temp.columns = [ticker]
+    df_global = pd.concat((df_global, df_temp), axis=1)
+
+# show correlation heatmap
+corr = df_global.corr()
+plt.figure(figsize=(16, 7))
+sns.heatmap(corr, annot=True, cmap='coolwarm', fmt=".2f", linewidths=.5)
+plt.title('Correlation Matrix Heatmap of Selected Stocks')
+plt.show()
+
+# Find the two most correlated stocks
+ticker_long, ticker_short = find_most_correlated_stocks(df_global)
+ticker_long, ticker_short = "AVGO", "NVDA"
 
 # get spread between two stocks:
-ticker_long = tickers[0]
-ticker_short = tickers[1]
 spread = df_global[ticker_long] - df_global[ticker_short]
 
 # get rolling mean and sd of spread
 window = 20
-n_std = 1.5
+n_std = 1.75
 rolling_mean = spread.rolling(window=window).mean()
 rolling_std = spread.rolling(window=window).std()
 
