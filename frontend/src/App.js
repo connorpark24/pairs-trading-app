@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { BarLoader } from "react-spinners";
 
 function App() {
   const [ticker1, setTicker1] = useState("");
@@ -19,9 +20,62 @@ function App() {
     bands_returns: "Cumulative Returns",
   };
 
+  const validateInputs = () => {
+    let isValid = true;
+    const errors = {};
+
+    // Validate ticker symbols
+    if (!ticker1.trim()) {
+      isValid = false;
+      errors.ticker1 = "Ticker 1 is required.";
+    }
+
+    if (!ticker2.trim()) {
+      isValid = false;
+      errors.ticker2 = "Ticker 2 is required.";
+    }
+
+    // Validate start and end date format (YYYY-MM-DD)
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(startDate)) {
+      isValid = false;
+      errors.startDate = "Invalid start date format (YYYY-MM-DD).";
+    }
+
+    if (!dateRegex.test(endDate)) {
+      isValid = false;
+      errors.endDate = "Invalid end date format (YYYY-MM-DD).";
+    }
+
+    // Validate numerical inputs
+    if (isNaN(std)) {
+      isValid = false;
+      errors.std = "Invalid standard deviation input.";
+    }
+
+    if (isNaN(movingAverageLength)) {
+      isValid = false;
+      errors.movingAverageLength = "Invalid moving average length input.";
+    }
+
+    // Display error messages if validation fails
+    if (!isValid) {
+      console.error("Input validation failed:", errors);
+      // You can set error messages in state and display them to the user
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (event) => {
     setLoading(true);
     event.preventDefault();
+
+    // if (!validateInputs()) {
+    //   setLoading(false);
+    //   return;
+    // }
 
     try {
       const response = await axios.post("http://localhost:8000/api/stocks/", {
@@ -33,7 +87,6 @@ function App() {
         window: parseInt(movingAverageLength),
       });
       setPlots(response.data);
-      console.log(response.data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -42,7 +95,7 @@ function App() {
   };
 
   return (
-    <div className="flex flex-col gap-2 container mx-auto p-4">
+    <div className="flex flex-col items-center gap-2 mx-auto p-4">
       <h1 className="text-4xl text-center">Pairs Trading Algorithm</h1>
       <h1 className="text-xl text-center">Description</h1>
       <form
@@ -146,7 +199,9 @@ function App() {
         </button>
       </form>
       {loading ? (
-        <p>Loading...</p>
+        <div className="mt-20">
+          <BarLoader color={"#3b82f6"} width={150} loading={loading} />
+        </div>
       ) : (
         <div className="flex flex-col">
           <div className="flex w-full">
