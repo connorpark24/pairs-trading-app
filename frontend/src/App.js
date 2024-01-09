@@ -125,7 +125,12 @@ function App() {
   return (
     <div className="flex flex-col items-center gap-2 mx-auto p-4">
       <h1 className="text-4xl text-center">Pairs Trading Algorithm</h1>
-      <h1 className="text-xl text-center lg:w-1/2">Description</h1>
+      <h1 className="text-sm text-center lg:w-3/5 my-2">
+        Pairs trading algorithm implemented using two different strategies. Uses
+        Yahoo Finance to fetch stock data, numpy and pandas to process and
+        prepare data, and matplotlib to display results. Frontend built using
+        React and data processing done via Django backend.
+      </h1>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col items-center gap-4 mx-auto"
@@ -208,7 +213,7 @@ function App() {
           type="submit"
           className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 w-56 lg:w-96"
         >
-          Get Graph
+          Get Graphs
         </button>
       </form>
       {loading ? (

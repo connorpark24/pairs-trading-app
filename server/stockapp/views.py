@@ -7,7 +7,6 @@ import statsmodels.tsa.stattools as ts
 from statsmodels.tsa.stattools import adfuller
 import datetime as dt
 import numpy as np
-import seaborn as sns
 import io
 import base64
 
@@ -52,7 +51,7 @@ def plot_stock_prices(df_stocks, ticker_long, ticker_short):
     plt.figure(figsize = (10, 6))
     df_stocks[ticker_long].plot(label=ticker_long+' Price')
     df_stocks[ticker_short].plot(label=ticker_short+' Price')
-    plt.title("Prices of {0} and {1}".format(ticker_long,ticker_short))
+    plt.title("Prices of {0} and {1}".format(ticker_long,ticker_short), fontsize=14)
     plt.legend()
     return plot_to_base64(plt)
 
@@ -60,7 +59,7 @@ def plot_spread(df_stocks, ticker_long, ticker_short):
     spread = df_stocks[ticker_long] - df_stocks[ticker_short]
     plt.figure(figsize = (8,5))
     spread.plot(label='Spread = '+ticker_long+' - '+ ticker_short,linestyle='--')
-    plt.title("Spread of Prices")
+    plt.title("Spread of Prices", fontsize=14)
     plt.legend()
     return plot_to_base64(plt)
 
@@ -70,7 +69,7 @@ def plot_ratio_static(ratio, ticker_long, ticker_short, n_std, ratio_mean, ratio
     plt.axhline(ratio_mean - n_std * ratio_std, color='green')
     plt.axhline(ratio_mean + n_std * ratio_std, color='green')
     plt.axhline(ratio_mean, color='red')
-    plt.title("Price Ratio of " + ticker_long + " and " + ticker_short + " (Static)")
+    plt.title("Price Ratio of " + ticker_long + " and " + ticker_short + " (Static)", fontsize=14)
     plt.legend()
     return plot_to_base64(plt)
 
@@ -83,7 +82,7 @@ def plot_ratio_bollinger(df_stocks, ratio, ticker_long, ticker_short, n_std, rat
     ratio.plot(label = 'Ratio = '+ticker_long+' - '+ ticker_short,linestyle='--', color='r')
     ratio_rolling_mean.plot(label = 'Price Ratio ' + str(window) + '-day MA', linestyle = '-.')
     plt.fill_between(df_stocks.index,lower_band, upper_band, alpha=0.2)
-    plt.title("Price Ratio of " + ticker_long + " and " + ticker_short + " (Bands)")
+    plt.title("Price Ratio of " + ticker_long + " and " + ticker_short + " (Bands)", fontsize=14)
     plt.legend()
     return plot_to_base64(plt)
 
@@ -99,7 +98,7 @@ def plot_returns(df_stocks, ticker_long, ticker_short, zscore, n_std, method):
     cumulative_returns = (1 + strategy_returns).cumprod()
     plt.figure(figsize=(8,5))
     cumulative_returns.plot()
-    plt.title("Cumulative Returns ({0})".format(method))
+    plt.title("Cumulative Returns ({0})".format(method), fontsize=14)
     return plot_to_base64(plt) 
     
 def plot_stock_prices_with_signals(df_stocks, ticker_long, ticker_short, zscore, n_std):
@@ -124,7 +123,7 @@ def plot_stock_prices_with_signals(df_stocks, ticker_long, ticker_short, zscore,
     buy_short.plot(color='g', linestyle='None', marker='^', label="_nolegend_")
     sell_short.plot(color='r', linestyle='None', marker='v', label="_nolegend_")
 
-    plt.title("Prices of {0} and {1} with Buy/Sell Signals".format(ticker_long, ticker_short))
+    plt.title("Prices of {0} and {1} with Buy and Short Signals".format(ticker_long, ticker_short), fontsize=14)
     plt.legend()
 
     return plot_to_base64(plt)
