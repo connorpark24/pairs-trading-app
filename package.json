@@ -1,10 +1,12 @@
 {
   "name": "pairs-trading-webapp",
-  "version": "1.0.0",
+  "private": true,
   "scripts": {
-    "build": "cd frontend && react-scripts build"
+    "start": "cd frontend && npm start",
+    "install": "cd frontend && npm install",
+    "build": "cd frontend && npm run build",
+    "heroku-postbuild": "npm run build"
   },
-  "engines": {
-    "node": "14.x"
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }
