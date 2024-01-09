@@ -56,6 +56,7 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000", 
+    "https://pairs-trading-ejk2dyg1v-connorpark24s-projects.vercel.app",
 ]
 
 
