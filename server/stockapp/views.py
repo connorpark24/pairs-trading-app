@@ -70,7 +70,7 @@ def plot_ratio_static(ratio, ticker_long, ticker_short, n_std, ratio_mean, ratio
     plt.axhline(ratio_mean - n_std * ratio_std, color='green')
     plt.axhline(ratio_mean + n_std * ratio_std, color='green')
     plt.axhline(ratio_mean, color='red')
-    plt.title("Price Ratio of " + ticker_long + " and " + ticker_short + " (Bands)")
+    plt.title("Price Ratio of " + ticker_long + " and " + ticker_short + " (Static)")
     plt.legend()
     return plot_to_base64(plt)
 
@@ -81,13 +81,13 @@ def plot_ratio_bollinger(df_stocks, ratio, ticker_long, ticker_short, n_std, rat
     upper_band.plot(label='Upper_band')
     lower_band.plot(label='Lower_band')
     ratio.plot(label = 'Ratio = '+ticker_long+' - '+ ticker_short,linestyle='--', color='r')
-    ratio_rolling_mean.plot(label = 'MA ' + str(window) + ' Ratio', linestyle = '-.')
+    ratio_rolling_mean.plot(label = 'Price Ratio ' + str(window) + '-day MA', linestyle = '-.')
     plt.fill_between(df_stocks.index,lower_band, upper_band, alpha=0.2)
-    plt.title("Price Ratio of " + ticker_long + " and " + ticker_short + " (Static)")
+    plt.title("Price Ratio of " + ticker_long + " and " + ticker_short + " (Bands)")
     plt.legend()
     return plot_to_base64(plt)
 
-def plot_returns(df_stocks, ticker_long, ticker_short, zscore, n_std):
+def plot_returns(df_stocks, ticker_long, ticker_short, zscore, n_std, method):
     # enter long position if z-score is less than -n_std
     # enter short position if z-score is greater than n_std
     signal = np.where(zscore < -n_std, 1, np.where(zscore > n_std, -1, 0))
@@ -99,9 +99,36 @@ def plot_returns(df_stocks, ticker_long, ticker_short, zscore, n_std):
     cumulative_returns = (1 + strategy_returns).cumprod()
     plt.figure(figsize=(8,5))
     cumulative_returns.plot()
-    plt.title("Cumulative Returns")
+    plt.title("Cumulative Returns ({0})".format(method))
     return plot_to_base64(plt) 
     
+def plot_stock_prices_with_signals(df_stocks, ticker_long, ticker_short, zscore, n_std):
+    plt.figure(figsize=(10, 6))
+
+    # Plot the stock prices
+    df_stocks[ticker_long].plot(label=ticker_long + ' Price')
+    df_stocks[ticker_short].plot(label=ticker_short + ' Price')
+
+    # Identify and plot buy signals (z-score < -n_std)
+    buy_long = df_stocks[ticker_long].copy()
+    sell_long = df_stocks[ticker_long].copy()
+    buy_long[zscore>-n_std] = np.nan
+    sell_long[zscore<n_std] = np.nan
+    buy_long.plot(color='g', linestyle='None', marker='^', label="_nolegend_")
+    sell_long.plot(color='r', linestyle='None', marker='v', label="_nolegend_")
+
+    buy_short = df_stocks[ticker_short].copy()
+    sell_short = df_stocks[ticker_short].copy()
+    buy_short[zscore<n_std] = np.nan
+    sell_short[zscore>-n_std] = np.nan
+    buy_short.plot(color='g', linestyle='None', marker='^', label="_nolegend_")
+    sell_short.plot(color='r', linestyle='None', marker='v', label="_nolegend_")
+
+    plt.title("Prices of {0} and {1} with Buy/Sell Signals".format(ticker_long, ticker_short))
+    plt.legend()
+
+    return plot_to_base64(plt)
+
 @api_view(['POST'])
 def stock_api(request):
     # plot formatting
@@ -147,11 +174,13 @@ def stock_api(request):
     bands_base64 = plot_ratio_bollinger(df_stocks, ratio, ticker_long, ticker_short, n_std, ratio_rolling_mean, ratio_rolling_std, window)
 
     # plot static returns
-    static_returns_base64 = plot_returns(df_stocks, ticker_long, ticker_short, zscore, n_std)
+    static_returns_base64 = plot_returns(df_stocks, ticker_long, ticker_short, zscore, n_std, "Static")
 
     # plot bands returns
-    bands_returns_base64 = plot_returns(df_stocks, ticker_long, ticker_short, rolling_zscore, n_std)
+    bands_returns_base64 = plot_returns(df_stocks, ticker_long, ticker_short, rolling_zscore, n_std, "Bands")
 
+    # plot prices with buy and sell signals
+    prices_signals_base64 = plot_stock_prices_with_signals(df_stocks, ticker_long, ticker_short, zscore, n_std)
     plt.close()
 
-    return Response({'prices': prices_base64, 'static': static_base64, 'bands': bands_base64, 'static_returns': static_returns_base64, 'bands_returns': bands_returns_base64})
+    return Response({'coint_p': coint_p, 'adf_p': adf_p, 'prices': prices_base64, 'static': static_base64, 'bands': bands_base64, 'static_returns': static_returns_base64, 'bands_returns': bands_returns_base64, 'prices_signals': prices_signals_base64})
