@@ -2,7 +2,7 @@
   "name": "pairs-trading-webapp",
   "version": "1.0.0",
   "scripts": {
-    "build": "cd frontend && npm run build"
+    "build": "cd frontend && react-scripts build"
   },
   "engines": {
     "node": "14.x"
