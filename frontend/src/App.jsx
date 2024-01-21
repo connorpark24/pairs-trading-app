@@ -101,7 +101,7 @@ function App() {
     // }
 
     try {
-      const response = await axios.post("http://localhost:8000/api/stocks/", {
+      const response = await axios.get("http://localhost:8000/", {
         ticker1,
         ticker2,
         startDate,

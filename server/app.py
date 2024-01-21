@@ -1,5 +1,5 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from flask import Flask, Response, request
+from flask_cors import CORS
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
@@ -9,6 +9,9 @@ import datetime as dt
 import numpy as np
 import io
 import base64
+
+app = Flask(__name__)
+CORS(app)
 
 matplotlib.use('Agg')
 plt.rcParams['font.family'] = 'sans-serif'
@@ -128,19 +131,20 @@ def plot_stock_prices_with_signals(df_stocks, ticker_long, ticker_short, zscore,
 
     return plot_to_base64(plt)
 
-@api_view(['POST'])
-def stock_api(request):
+@app.route('/')
+def stock_api():
     # plot formatting
     figs=(8,4.5)
     plt.figure(figsize = figs)
 
     # process data
-    ticker_long = request.data.get('ticker1') or 'AAPL' 
-    ticker_short = request.data.get('ticker2') or 'MSFT' 
-    start_date_str = request.data.get('startDate')
-    end_date_str = request.data.get('endDate')
-    window = request.data.get('window') or 20
-    n_std = request.data.get('std') or 2
+    data = request.json
+    ticker_long = data.get('ticker1') or 'AAPL' 
+    ticker_short = data.get('ticker2') or 'MSFT' 
+    start_date_str = data.get('startDate')
+    end_date_str = data.get('endDate')
+    window = data.get('window') or 20
+    n_std = data.get('std') or 2
 
     df_stocks = pd.DataFrame()
     for ticker in [ticker_long, ticker_short]:
@@ -183,3 +187,7 @@ def stock_api(request):
     plt.close()
 
     return Response({'coint_p': coint_p, 'adf_p': adf_p, 'prices': prices_base64, 'static': static_base64, 'bands': bands_base64, 'static_returns': static_returns_base64, 'bands_returns': bands_returns_base64, 'prices_signals': prices_signals_base64})
+
+
+if __name__ == '__main__':
+    app.run()
