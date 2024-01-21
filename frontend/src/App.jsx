@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { BarLoader } from "react-spinners";
 
@@ -43,53 +43,53 @@ function App() {
   const defaultStartDate = formatDate(lastYear);
   const defaultEndDate = formatDate(today);
 
-  const validateInputs = () => {
-    let isValid = true;
-    const errors = {};
+  // const validateInputs = () => {
+  //   let isValid = true;
+  //   const errors = {};
 
-    // Validate ticker symbols
-    if (!ticker1.trim()) {
-      isValid = false;
-      errors.ticker1 = "Ticker 1 is required.";
-    }
+  //   // Validate ticker symbols
+  //   if (!ticker1.trim()) {
+  //     isValid = false;
+  //     errors.ticker1 = "Ticker 1 is required.";
+  //   }
 
-    if (!ticker2.trim()) {
-      isValid = false;
-      errors.ticker2 = "Ticker 2 is required.";
-    }
+  //   if (!ticker2.trim()) {
+  //     isValid = false;
+  //     errors.ticker2 = "Ticker 2 is required.";
+  //   }
 
-    // Validate start and end date format (YYYY-MM-DD)
-    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-    if (!dateRegex.test(startDate)) {
-      isValid = false;
-      errors.startDate = "Invalid start date format (YYYY-MM-DD).";
-    }
+  //   // Validate start and end date format (YYYY-MM-DD)
+  //   const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  //   if (!dateRegex.test(startDate)) {
+  //     isValid = false;
+  //     errors.startDate = "Invalid start date format (YYYY-MM-DD).";
+  //   }
 
-    if (!dateRegex.test(endDate)) {
-      isValid = false;
-      errors.endDate = "Invalid end date format (YYYY-MM-DD).";
-    }
+  //   if (!dateRegex.test(endDate)) {
+  //     isValid = false;
+  //     errors.endDate = "Invalid end date format (YYYY-MM-DD).";
+  //   }
 
-    // Validate numerical inputs
-    if (isNaN(std)) {
-      isValid = false;
-      errors.std = "Invalid standard deviation input.";
-    }
+  //   // Validate numerical inputs
+  //   if (isNaN(std)) {
+  //     isValid = false;
+  //     errors.std = "Invalid standard deviation input.";
+  //   }
 
-    if (isNaN(movingAverageLength)) {
-      isValid = false;
-      errors.movingAverageLength = "Invalid moving average length input.";
-    }
+  //   if (isNaN(movingAverageLength)) {
+  //     isValid = false;
+  //     errors.movingAverageLength = "Invalid moving average length input.";
+  //   }
 
-    // Display error messages if validation fails
-    if (!isValid) {
-      console.error("Input validation failed:", errors);
-      // You can set error messages in state and display them to the user
-      return false;
-    }
+  //   // Display error messages if validation fails
+  //   if (!isValid) {
+  //     console.error("Input validation failed:", errors);
+  //     // You can set error messages in state and display them to the user
+  //     return false;
+  //   }
 
-    return true;
-  };
+  //   return true;
+  // };
 
   const handleSubmit = async (event) => {
     setLoading(true);
