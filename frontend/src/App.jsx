@@ -101,13 +101,17 @@ function App() {
     // }
 
     try {
-      const response = await axios.get("http://localhost:8000/", {
+      const response = await axios.post("http://localhost:8000/", {
         ticker1,
         ticker2,
         startDate,
         endDate,
         std: parseFloat(std),
         window: parseInt(movingAverageLength),
+      } ,{
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
       setPlots(response.data);
       setTestResults({

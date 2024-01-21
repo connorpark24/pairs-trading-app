@@ -1,4 +1,4 @@
-from flask import Flask, Response, request
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import pandas as pd
 import matplotlib
@@ -131,7 +131,7 @@ def plot_stock_prices_with_signals(df_stocks, ticker_long, ticker_short, zscore,
 
     return plot_to_base64(plt)
 
-@app.route('/')
+@app.route('/', methods=['POST'])
 def stock_api():
     # plot formatting
     figs=(8,4.5)
@@ -186,7 +186,18 @@ def stock_api():
     prices_signals_base64 = plot_stock_prices_with_signals(df_stocks, ticker_long, ticker_short, zscore, n_std)
     plt.close()
 
-    return Response({'coint_p': coint_p, 'adf_p': adf_p, 'prices': prices_base64, 'static': static_base64, 'bands': bands_base64, 'static_returns': static_returns_base64, 'bands_returns': bands_returns_base64, 'prices_signals': prices_signals_base64})
+    response_data = {
+        'coint_p': coint_p, 
+        'adf_p': adf_p, 
+        'prices': prices_base64, 
+        'static': static_base64, 
+        'bands': bands_base64, 
+        'static_returns': static_returns_base64, 
+        'bands_returns': bands_returns_base64, 
+        'prices_signals': prices_signals_base64
+    }
+
+    return jsonify(response_data)
 
 
 if __name__ == '__main__':
