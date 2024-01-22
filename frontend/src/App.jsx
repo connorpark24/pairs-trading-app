@@ -141,7 +141,7 @@ function App() {
       >
         <div className="grid sm:grid-cols-2 lg:grid-cols-6 flex-wrap gap-4">
           <div className="flex flex-col">
-            <label className="text-base text-gray-700">Ticker 1</label>
+            <label className="text-base">Ticker 1</label>
             <input
               type="text"
               value={ticker1}
@@ -152,7 +152,7 @@ function App() {
           </div>
 
           <div className="flex flex-col">
-            <label className="text-base text-gray-700">Ticker 2</label>
+            <label className="text-base">Ticker 2</label>
             <input
               type="text"
               value={ticker2}
@@ -163,7 +163,7 @@ function App() {
           </div>
 
           <div className="flex flex-col">
-            <label className="text-base text-gray-700">
+            <label className="text-base">
               Start Date (YYYY-MM-DD)
             </label>
             <input
@@ -176,7 +176,7 @@ function App() {
           </div>
 
           <div className="flex flex-col">
-            <label className="text-base text-gray-700">
+            <label className="text-base">
               End Date (YYYY-MM-DD)
             </label>
             <input
@@ -189,7 +189,7 @@ function App() {
           </div>
 
           <div className="flex flex-col">
-            <label className="text-base text-gray-700">
+            <label className="text-base">
               Standard Deviation
             </label>
             <input
@@ -203,7 +203,7 @@ function App() {
           </div>
 
           <div className="flex flex-col">
-            <label className="text-base text-gray-700">MA Window</label>
+            <label className="text-base">MA Window</label>
             <input
               type="number"
               value={movingAverageLength}
