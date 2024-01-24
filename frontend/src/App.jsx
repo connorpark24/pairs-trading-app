@@ -101,7 +101,7 @@ function App() {
     // }
 
     try {
-      const response = await axios.post("http://localhost:8000/", {
+      const response = await axios.post("https://pairstrading-0e7bd07afd90.herokuapp.com/", {
         ticker1,
         ticker2,
         startDate,
