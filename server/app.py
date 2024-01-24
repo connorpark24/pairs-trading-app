@@ -52,7 +52,7 @@ def coint_testing(df_stocks, ticker_long, ticker_short):
     return coint_p, adf_p
 
 def plot_stock_prices(df_stocks, ticker_long, ticker_short):
-    plt.figure(figsize = (10, 6))
+    plt.figure(figsize = (8, 5))
     df_stocks[ticker_long].plot(label=ticker_long+' Price')
     df_stocks[ticker_short].plot(label=ticker_short+' Price')
     plt.title("Prices of {0} and {1}".format(ticker_long,ticker_short), fontsize=14)
@@ -61,14 +61,14 @@ def plot_stock_prices(df_stocks, ticker_long, ticker_short):
 
 def plot_spread(df_stocks, ticker_long, ticker_short):
     spread = df_stocks[ticker_long] - df_stocks[ticker_short]
-    plt.figure(figsize = (8,5))
+    plt.figure(figsize = (6, 4))
     spread.plot(label='Spread = '+ticker_long+' - '+ ticker_short,linestyle='--')
     plt.title("Spread of Prices", fontsize=14)
     plt.legend()
     return plot_to_base64(plt)
 
 def plot_ratio_static(ratio, ticker_long, ticker_short, n_std, ratio_mean, ratio_std):
-    plt.figure(figsize = (8,5))
+    plt.figure(figsize = (6, 4))
     ratio.plot(label='Ratio = '+ticker_long+' / '+ ticker_short,linestyle='-')
     plt.axhline(ratio_mean - n_std * ratio_std, color='green')
     plt.axhline(ratio_mean + n_std * ratio_std, color='green')
@@ -80,7 +80,7 @@ def plot_ratio_static(ratio, ticker_long, ticker_short, n_std, ratio_mean, ratio
 def plot_ratio_bollinger(df_stocks, ratio, ticker_long, ticker_short, n_std, ratio_rolling_mean, ratio_rolling_std, window):
     upper_band = ratio_rolling_mean + n_std * ratio_rolling_std
     lower_band = ratio_rolling_mean - n_std * ratio_rolling_std
-    plt.figure(figsize = (8,5))
+    plt.figure(figsize = (6, 4))
     upper_band.plot(label='Upper_band')
     lower_band.plot(label='Lower_band')
     ratio.plot(label = 'Ratio = '+ticker_long+' - '+ ticker_short,linestyle='--', color='r')
@@ -100,13 +100,13 @@ def plot_returns(df_stocks, ticker_long, ticker_short, zscore, n_std, method):
     returns = df_stocks[ticker_long].pct_change() - df_stocks[ticker_short].pct_change()
     strategy_returns = signal.shift(1) * returns
     cumulative_returns = (1 + strategy_returns).cumprod()
-    plt.figure(figsize=(8,5))
+    plt.figure(figsize=(6, 4))
     cumulative_returns.plot()
     plt.title("Cumulative Returns ({0})".format(method), fontsize=14)
     return plot_to_base64(plt) 
     
 def plot_stock_prices_with_signals(df_stocks, ticker_long, ticker_short, zscore, n_std):
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(8, 5))
 
     # Plot the stock prices
     df_stocks[ticker_long].plot(label=ticker_long + ' Price')
