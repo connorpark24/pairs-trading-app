@@ -101,7 +101,7 @@ function App() {
     // }
 
     try {
-      const response = await axios.post(import.meta.env.url, {
+      const response = await axios.post(import.meta.env.VITE_API_URL, {
         ticker1,
         ticker2,
         startDate,
